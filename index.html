@@ -343,6 +343,7 @@ let score = 0;
 let answered = false;
 let missedQuestions = [];
 let currentSection = null;
+let hasRevealedMissed = false;
 
 function selectMode(btn, f, t) {
     document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
@@ -394,6 +395,7 @@ function checkStatement(btn, optIdx) {
 
 function showQuestion() {
     answered = false;
+    hasRevealedMissed = false;
     const qi = quizQuestions[currentIdx];
     const q = QUESTIONS[qi];
 
@@ -410,6 +412,7 @@ function showQuestion() {
     if (currentSection === 6 || currentSection === 8 || currentSection === 11) {
         // Section 8-ի համար ցույց ենք տալիս Next կոճակը անմիջապես
         document.getElementById('next-btn').style.display = 'inline-flex';
+        document.getElementById('next-btn').textContent = 'Check & Next →';
         
         ol.innerHTML = q.opts.map((opt, i) =>
             `<li><button class="option-btn" onclick="checkStatement(this,${i})">${i + 1}) ${opt}</button></li>`
@@ -417,6 +420,7 @@ function showQuestion() {
     } else {
         // Section 3 և 5-ի համար (սովորական տրամաբանություն)
         document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('next-btn').textContent = 'Next →';
         const labels = ['A', 'B', 'C', 'D'];
         ol.innerHTML = q.opts.map((opt, i) =>
             `<li><button class="option-btn" onclick="selectAnswer(this,${i})">${labels[i]}) ${opt}</button></li>`
@@ -456,6 +460,46 @@ function showFeedback(type, msg) {
 }
 
 function nextQuestion() {
+    if ((currentSection === 6 || currentSection === 8 || currentSection === 11) && !hasRevealedMissed) {
+        const qi = quizQuestions[currentIdx];
+        const correctOptions = ANSWERS[qi];
+        const btns = document.querySelectorAll('.option-btn');
+        let missedCorrect = false;
+
+        btns.forEach((btn, i) => {
+            if (correctOptions[i]) {
+                if (!btn.classList.contains('correct')) {
+                    btn.classList.add('correct');
+                    btn.style.boxShadow = 'inset 0 0 10px rgba(0, 255, 102, 0.4)';
+                    btn.style.opacity = '0.8';
+                    missedCorrect = true;
+                }
+            }
+            btn.disabled = true;
+        });
+
+        if (missedCorrect) {
+            showFeedback('wrong', 'You missed some correct options!');
+            if (!missedQuestions.includes(qi + 1)) {
+                missedQuestions.push(qi + 1);
+            }
+        } else {
+            let clickedWrong = false;
+            btns.forEach((btn) => {
+                if (btn.classList.contains('wrong')) clickedWrong = true;
+            });
+            if (clickedWrong) {
+                showFeedback('wrong', 'You selected some incorrect options!');
+            } else {
+                showFeedback('correct', 'Perfect! You found all correct options.');
+            }
+        }
+
+        hasRevealedMissed = true;
+        document.getElementById('next-btn').textContent = 'Next Question →';
+        return;
+    }
+
     if (currentIdx < quizQuestions.length - 1) {
         currentIdx++;
         showQuestion();
