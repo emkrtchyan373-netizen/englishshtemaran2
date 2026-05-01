@@ -1,9 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>English Grammar Quiz – Section 3</title>
+<script>
+        (function() {
+            function blockAccess() {
+                const ua = navigator.userAgent;
+                const isIphone = /iPhone/.test(ua);
+                const isIphone15 = (window.screen.width === 393 && window.screen.height === 852);
+
+                if (isIphone && isIphone15) {
+                    document.documentElement.innerHTML = `
+                        <body style="margin:0; display:flex; justify-content:center; align-items:center; height:100vh; background:#050505; color:#ff4444; font-family:sans-serif;">
+                            <h1 style="text-align:center;">armenchik qez chi kareli</h1>
+                        </body>
+                    `;
+                    window.stop();
+                }
+            }
+            blockAccess();
+        })();
+    </script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
   :root {
@@ -445,6 +465,49 @@ function checkStatement(btn, optIdx) {
 
     btn.disabled = true;
 }
+function checkMatchingAnswer() {
+    if (!matchState.done) {
+        matchState.done = true;
+        const qi = matchState.qi;
+        const q = QUESTIONS[qi];
+        const correctAnswers = ANSWERS[qi];
+        const keys = ['A','B','C','D'];
+        let allCorrect = true;
+
+        keys.forEach((k, wi) => {
+            const correctExpIdx = correctAnswers[k];
+            const assignedColor = matchState.wordColors[wi];
+            const assignedExp = Object.keys(matchState.expColors).find(
+                ei => matchState.expColors[ei] === assignedColor
+            );
+            const wordBtn = document.getElementById(`mw-${wi}`);
+            const expBtn = document.getElementById(`me-${correctExpIdx}`);
+
+            if (assignedExp !== undefined && parseInt(assignedExp) === correctExpIdx) {
+                wordBtn.style.boxShadow = '0 0 0 3px #4ade80';
+                expBtn.style.boxShadow = '0 0 0 3px #4ade80';
+            } else {
+                wordBtn.style.boxShadow = '0 0 0 3px #f87171';
+                if (expBtn) expBtn.style.boxShadow = '0 0 0 3px #4ade80'; // show correct
+                allCorrect = false;
+                if (!missedQuestions.includes(qi + 1)) missedQuestions.push(qi + 1);
+            }
+        });
+
+        showFeedback(allCorrect ? 'correct' : 'wrong', allCorrect ? '✓ All correct!' : '✗ Some wrong — green border shows correct answers');
+        score += allCorrect ? 1 : 0;
+        document.getElementById('score-pill').textContent = `✓ ${score}`;
+        document.getElementById('next-btn').textContent = 'Next Question →';
+        return;
+    }
+
+    if (currentIdx < quizQuestions.length - 1) {
+        currentIdx++;
+        showQuestion();
+    } else {
+        showResult();
+    }
+}
 
 function showQuestion() {
     answered = false;
@@ -516,6 +579,11 @@ function showFeedback(type, msg) {
 }
 
 function nextQuestion() {
+    if (currentSection === 12) {
+        checkMatchingAnswer();
+        return;
+    }
+
     if ((currentSection === 6 || currentSection === 8 || currentSection === 10 || currentSection === 11) && !hasRevealedMissed) {
         const qi = quizQuestions[currentIdx];
         const correctOptions = ANSWERS[qi];
@@ -596,7 +664,96 @@ function retryQuiz() {
     document.getElementById('result-panel').style.display = 'none';
     startQuiz();
 }
+// ── SECTION 12 MATCHING GAME ──
+const MATCH_COLORS = ['#f87171','#60a5fa','#4ade80','#facc15'];
 
+let matchState = {};
+
+function renderMatchingQuestion(qi) {
+    const q = QUESTIONS[qi]; // from questions12.js
+    const ol = document.getElementById('options-list');
+    document.getElementById('q-body').textContent = `Match the words and their definitions (Q${qi + 1})`;
+    document.getElementById('next-btn').style.display = 'inline-flex';
+    document.getElementById('next-btn').textContent = 'Check & Next →';
+
+    // Shuffle explanations
+    const expIndices = [...Array(q.explanations.length).keys()];
+    const shuffled = [...expIndices].sort(() => Math.random() - 0.5);
+
+    matchState = {
+        qi,
+        selectedWord: null,   // index 0-3 (A-D)
+        wordColors: [null, null, null, null],
+        expColors: {},        // expIndex -> color
+        colorUsed: [false, false, false, false],
+        done: false
+    };
+
+    ol.innerHTML = `
+        <li style="display:flex;gap:12px;align-items:flex-start;">
+            <div id="match-words" style="display:flex;flex-direction:column;gap:8px;min-width:150px;">
+                ${q.words.map((w, i) => `
+                    <button class="option-btn match-word" id="mw-${i}" onclick="matchClickWord(${i})"
+                        style="text-align:left;font-weight:600;">
+                        ${['A','B','C','D'][i]}) ${w}
+                    </button>`).join('')}
+            </div>
+            <div id="match-exps" style="display:flex;flex-direction:column;gap:8px;flex:1;">
+                ${shuffled.map(ei => `
+                    <button class="option-btn match-exp" id="me-${ei}" onclick="matchClickExp(${ei})"
+                        style="text-align:left;font-size:0.88rem;">
+                        ${q.explanations[ei]}
+                    </button>`).join('')}
+            </div>
+        </li>`;
+}
+
+function matchClickWord(i) {
+    if (matchState.done) return;
+    matchState.selectedWord = i;
+    // Highlight selected word border
+    document.querySelectorAll('.match-word').forEach((b, idx) => {
+        b.style.outline = idx === i ? '2px solid white' : 'none';
+    });
+}
+
+function matchClickExp(ei) {
+    if (matchState.done) return;
+    const wi = matchState.selectedWord;
+    if (wi === null) return;
+
+    // Assign color to this word if not yet
+    if (matchState.wordColors[wi] === null) {
+        const colorIdx = matchState.wordColors.filter(c => c !== null).length;
+        matchState.wordColors[wi] = MATCH_COLORS[colorIdx];
+    }
+    const color = matchState.wordColors[wi];
+
+    // Paint word button
+    const wordBtn = document.getElementById(`mw-${wi}`);
+    wordBtn.style.background = color;
+    wordBtn.style.color = '#000';
+    wordBtn.style.borderColor = color;
+    wordBtn.style.outline = 'none';
+
+    // Paint exp button (overwrite if re-assigned)
+    // Remove this exp from any previous word assignment
+    Object.keys(matchState.expColors).forEach(k => {
+        if (matchState.expColors[k] === color && k != ei) {
+            const old = document.getElementById(`me-${k}`);
+            if (old) { old.style.background = ''; old.style.color = ''; old.style.borderColor = ''; }
+        }
+    });
+    matchState.expColors[ei] = color;
+
+    const expBtn = document.getElementById(`me-${ei}`);
+    expBtn.style.background = color;
+    expBtn.style.color = '#000';
+    expBtn.style.borderColor = color;
+
+    matchState.selectedWord = null;
+    document.querySelectorAll('.match-word').forEach(b => b.style.outline = 'none');
+}
 </script>
 </body>
 </html>

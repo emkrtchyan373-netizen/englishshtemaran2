@@ -440,51 +440,50 @@ questions: [
       "a piece of paper that shows how much you have to pay for goods or services"
     ]
   }
-];
+  ],
 
-// Answers: index of the correct explanation (0-based) for each word A, B, C, D
-// Format: { A: explanationIndex, B: explanationIndex, C: explanationIndex, D: explanationIndex }
-answers: [
- 1:  { A: 0, B: 2, C: 1, D: 4 },
- 2:  { A: 0, B: 2, C: 1, D: 4 },
- 3:  { A: 4, B: 1, C: 2, D: 0 },
- 4:  { A: 3, B: 0, C: 2, D: 1 },
- 5:  { A: 3, B: 1, C: 2, D: 4 },
- 6:  { A: 4, B: 2, C: 3, D: 0 },
- 7:  { A: 4, B: 0, C: 1, D: 3 },
- 8:  { A: 1, B: 2, C: 3, D: 0 },
- 9:  { A: 4, B: 1, C: 2, D: 3 },
- 10: { A: 4, B: 2, C: 3, D: 0 },
- 11: { A: 0, B: 1, C: 2, D: 4 },
- 12: { A: 2, B: 1, C: 3, D: 0 },
- 13: { A: 3, B: 2, C: 0, D: 1 },
- 14: { A: 3, B: 2, C: 0, D: 4 },
- 15: { A: 3, B: 0, C: 4, D: 1 },
- 16: { A: 2, B: 0, C: 1, D: 3 },
- 17: { A: 0, B: 2, C: 1, D: 3 },
- 18: { A: 0, B: 1, C: 2, D: 3 },
- 19: { A: 4, B: 0, C: 2, D: 3 },
- 20: { A: 0, B: 1, C: 2, D: 3 },
- 21: { A: 3, B: 0, C: 2, D: 4 },
- 22: { A: 0, B: 2, C: 1, D: 3 },
- 23: { A: 0, B: 1, C: 2, D: 4 },
- 24: { A: 4, B: 3, C: 2, D: 0 },
- 25: { A: 0, B: 2, C: 1, D: 3 },
- 26: { A: 0, B: 2, C: 3, D: 4 },
- 27: { A: 1, B: 0, C: 2, D: 4 },
- 28: { A: 2, B: 0, C: 1, D: 4 },
- 29: { A: 3, B: 1, C: 2, D: 0 },
- 30: { A: 4, B: 0, C: 2, D: 1 },
- 31: { A: 0, B: 1, C: 2, D: 3 },
- 32: { A: 0, B: 1, C: 4, D: 3 },
- 33: { A: 3, B: 2, C: 4, D: 1 },
- 34: { A: 0, B: 2, C: 1, D: 4 },
- 35: { A: 0, B: 2, C: 1, D: 4 },
- 36: { A: 3, B: 0, C: 2, D: 4 },
- 37: { A: 1, B: 0, C: 3, D: 4 },
- 38: { A: 2, B: 1, C: 4, D: 0 },
- 39: { A: 3, B: 0, C: 1, D: 2 },
- 40: { A: 0, B: 3, C: 4, D: 1 }
-]
-
-export { questions, answers };
+  // Answers: index of the correct explanation (0-based) for each word A, B, C, D
+  // Format: { A: explanationIndex, B: explanationIndex, C: explanationIndex, D: explanationIndex }
+  answers: [
+    { A: 0, B: 2, C: 1, D: 4 }, // 1
+    { A: 0, B: 2, C: 1, D: 4 }, // 2
+    { A: 4, B: 1, C: 2, D: 0 }, // 3
+    { A: 3, B: 0, C: 2, D: 1 }, // 4
+    { A: 3, B: 1, C: 2, D: 4 }, // 5
+    { A: 4, B: 2, C: 3, D: 0 }, // 6
+    { A: 4, B: 0, C: 1, D: 3 }, // 7
+    { A: 1, B: 2, C: 3, D: 0 }, // 8
+    { A: 4, B: 1, C: 2, D: 3 }, // 9
+    { A: 4, B: 2, C: 3, D: 0 }, // 10
+    { A: 0, B: 1, C: 2, D: 4 }, // 11
+    { A: 2, B: 1, C: 3, D: 0 }, // 12
+    { A: 3, B: 2, C: 0, D: 1 }, // 13
+    { A: 3, B: 2, C: 0, D: 4 }, // 14
+    { A: 3, B: 0, C: 4, D: 1 }, // 15
+    { A: 2, B: 0, C: 1, D: 3 }, // 16
+    { A: 0, B: 2, C: 1, D: 3 }, // 17
+    { A: 0, B: 1, C: 2, D: 3 }, // 18
+    { A: 4, B: 0, C: 2, D: 3 }, // 19
+    { A: 0, B: 1, C: 2, D: 3 }, // 20
+    { A: 3, B: 0, C: 2, D: 4 }, // 21
+    { A: 0, B: 2, C: 1, D: 3 }, // 22
+    { A: 0, B: 1, C: 2, D: 4 }, // 23
+    { A: 4, B: 3, C: 2, D: 0 }, // 24
+    { A: 0, B: 2, C: 1, D: 3 }, // 25
+    { A: 0, B: 2, C: 3, D: 4 }, // 26
+    { A: 1, B: 0, C: 2, D: 4 }, // 27
+    { A: 2, B: 0, C: 1, D: 4 }, // 28
+    { A: 3, B: 1, C: 2, D: 0 }, // 29
+    { A: 4, B: 0, C: 2, D: 1 }, // 30
+    { A: 0, B: 1, C: 2, D: 3 }, // 31
+    { A: 0, B: 1, C: 4, D: 3 }, // 32
+    { A: 3, B: 2, C: 4, D: 1 }, // 33
+    { A: 0, B: 2, C: 1, D: 4 }, // 34
+    { A: 0, B: 2, C: 1, D: 4 }, // 35
+    { A: 3, B: 0, C: 2, D: 4 }, // 36
+    { A: 1, B: 0, C: 3, D: 4 }, // 37
+    { A: 2, B: 1, C: 4, D: 0 }, // 38
+    { A: 3, B: 0, C: 1, D: 2 }, // 39
+    { A: 0, B: 3, C: 4, D: 1 }  // 40
+  ]
+};
