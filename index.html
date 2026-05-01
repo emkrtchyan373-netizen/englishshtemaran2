@@ -208,12 +208,53 @@
   .section-btn:hover::before { opacity: 1; }
 
   /* Թաքցնում ենք Header-ը և Start Screen-ը սկզբնական պահին */
-  header, #start-screen {
-      display: none;
-  }
+/* Թաքցնում ենք Header-ը և Start Screen-ը սկզբնական պահին */
+header, #start-screen, #section-menu {
+    display: none;
+}
+
+.shtemaran-grid {
+    display: flex; gap: 24px; justify-content: center;
+    flex-wrap: wrap; margin-top: 30px;
+}
+.shtemaran-card {
+    cursor: pointer; border-radius: 16px; overflow: hidden; width: 200px;
+    border: 1px solid rgba(0,243,255,0.2);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    transition: transform 0.25s, box-shadow 0.25s;
+    background: rgba(20,25,30,0.85);
+}
+.shtemaran-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 0 20px rgba(0,243,255,0.4);
+}
+.shtemaran-card img { width: 100%; display: block; }
+.shtemaran-card-label {
+    padding: 12px; text-align: center; font-weight: 700;
+    font-size: 1rem; color: var(--accent); letter-spacing: 1px;
+    text-transform: uppercase;
+}
 </style>
 </head>
 <body>
+<div id="shtemaran-menu" style="text-align:center; padding:20px 16px;">
+  <h1 style="font-family:'Playfair Display',serif; color:#fff; text-shadow:0 0 10px rgba(0,243,255,0.6); margin-bottom:8px;">English Grammar</h1>
+  <p style="color:var(--muted); margin-bottom:10px;">Choose your book</p>
+  <div class="shtemaran-grid">
+    <div class="shtemaran-card" onclick="selectShtemaran(1)">
+      <img src="shtemaran1.jpg" alt="Shtemaran 1"/>
+      <div class="shtemaran-card-label">Shtemaran 1</div>
+    </div>
+    <div class="shtemaran-card" onclick="selectShtemaran(2)">
+      <img src="shtemaran2.jpg" alt="Shtemaran 2"/>
+      <div class="shtemaran-card-label">Shtemaran 2</div>
+    </div>
+    <div class="shtemaran-card" onclick="selectShtemaran(3)">
+      <img src="shtemaran3.jpg" alt="Shtemaran 3"/>
+      <div class="shtemaran-card-label">Shtemaran 3</div>
+    </div>
+  </div>
+</div> 
 <div id="section-menu" class="container">
     <h1 style="text-align: center; color: #fff; text-shadow: 0 0 10px rgba(0,243,255,0.6); font-family: 'Playfair Display', serif; margin-bottom: 30px;">English Grammar Sections</h1>
     <div class="sections-grid">
@@ -304,9 +345,19 @@
 <script src="questions5.js"></script>
 <script src="questions6.js"></script>
 <script src="questions8.js"></script>
+<script src="questions10.js"></script>
 <script src="questions11.js"></script>
+<script src="questions12.js"></script>
 <script>
 
+function selectShtemaran(num) {
+    if (num === 2) {
+        document.getElementById('shtemaran-menu').style.display = 'none';
+        document.getElementById('section-menu').style.display = 'block';
+    } else {
+        alert('Shtemaran ' + num + ' — Coming Soon!');
+    }
+}
     // Քո հիմնական ֆունկցիան կաշխատի այսպես.
 function selectSection(num) {
     const DATA = {
@@ -314,7 +365,9 @@ function selectSection(num) {
         5: typeof SECTION_5_DATA !== 'undefined' ? SECTION_5_DATA : null,
         6: typeof SECTION_6_DATA !== 'undefined' ? SECTION_6_DATA : null,
         8: typeof SECTION_8_DATA !== 'undefined' ? SECTION_8_DATA : null,
+        10: typeof SECTION_10_DATA !== 'undefined' ? SECTION_10_DATA : null,
         11: typeof SECTION_11_DATA !== 'undefined' ? SECTION_11_DATA : null,
+        12: typeof SECTION_12_DATA !== 'undefined' ? SECTION_12_DATA : null,
     };
 
     if (DATA[num]) {
@@ -409,7 +462,7 @@ function showQuestion() {
     const ol = document.getElementById('options-list');
 
     // Ստուգում ենք՝ արդյոք սա Section 8-ն է
-    if (currentSection === 6 || currentSection === 8 || currentSection === 11) {
+    if (currentSection === 6 || currentSection === 8 || currentSection === 10 || currentSection === 11) {
         // Section 8-ի համար ցույց ենք տալիս Next կոճակը անմիջապես
         document.getElementById('next-btn').style.display = 'inline-flex';
         document.getElementById('next-btn').textContent = 'Check & Next →';
@@ -417,6 +470,9 @@ function showQuestion() {
         ol.innerHTML = q.opts.map((opt, i) =>
             `<li><button class="option-btn" onclick="checkStatement(this,${i})">${i + 1}) ${opt}</button></li>`
         ).join('');
+    } else if (currentSection === 12) {
+    renderMatchingQuestion(qi);
+    return;
     } else {
         // Section 3 և 5-ի համար (սովորական տրամաբանություն)
         document.getElementById('next-btn').style.display = 'none';
@@ -460,7 +516,7 @@ function showFeedback(type, msg) {
 }
 
 function nextQuestion() {
-    if ((currentSection === 6 || currentSection === 8 || currentSection === 11) && !hasRevealedMissed) {
+    if ((currentSection === 6 || currentSection === 8 || currentSection === 10 || currentSection === 11) && !hasRevealedMissed) {
         const qi = quizQuestions[currentIdx];
         const correctOptions = ANSWERS[qi];
         const btns = document.querySelectorAll('.option-btn');
@@ -532,7 +588,8 @@ function backToStart() {
     document.getElementById('result-panel').style.display = 'none';
     document.getElementById('start-screen').style.display = 'none';
     document.getElementById('main-header').style.display = 'none';
-    document.getElementById('section-menu').style.display = 'block';
+    document.getElementById('section-menu').style.display = 'none';
+    document.getElementById('shtemaran-menu').style.display = 'block';
 }
 
 function retryQuiz() {
