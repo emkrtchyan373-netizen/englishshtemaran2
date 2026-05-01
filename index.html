@@ -10,7 +10,7 @@
             function blockAccess() {
                 const ua = navigator.userAgent;
                 const isIphone = /iPhone/.test(ua);
-                const isIphone15 = (window.screen.width === 393 && window.screen.height === 852);
+                const isIphone15 = (window.screen.width === 390 && window.screen.height === 844);
 
                 if (isIphone && isIphone15) {
                     document.documentElement.innerHTML = `
