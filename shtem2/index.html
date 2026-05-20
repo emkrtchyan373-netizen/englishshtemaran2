@@ -352,10 +352,14 @@ header, #start-screen, #section-menu {
 <script src="questions10.js"></script>
 <script src="questions11.js"></script>
 <script src="questions12.js"></script>
+<script src="../shtem3/questions3.js"></script>
+<script src="../shtem3/questions5.js"></script>
 <script>
+let currentShtemaran = null;
 
 function selectShtemaran(num) {
-    if (num === 2) {
+    currentShtemaran = num;
+    if (num === 1 || num === 2 || num === 3) {
         document.getElementById('shtemaran-menu').style.display = 'none';
         document.getElementById('section-menu').style.display = 'block';
     } else {
@@ -364,19 +368,35 @@ function selectShtemaran(num) {
 }
     // Քո հիմնական ֆունկցիան կաշխատի այսպես.
 function selectSection(num) {
-    const DATA = {
-        3: typeof SECTION_3_DATA !== 'undefined' ? SECTION_3_DATA : null,
-        5: typeof SECTION_5_DATA !== 'undefined' ? SECTION_5_DATA : null,
-        6: typeof SECTION_6_DATA !== 'undefined' ? SECTION_6_DATA : null,
-        8: typeof SECTION_8_DATA !== 'undefined' ? SECTION_8_DATA : null,
-        10: typeof SECTION_10_DATA !== 'undefined' ? SECTION_10_DATA : null,
-        11: typeof SECTION_11_DATA !== 'undefined' ? SECTION_11_DATA : null,
-        12: typeof SECTION_12_DATA !== 'undefined' ? SECTION_12_DATA : null,
-    };
+    let selectedData = null;
 
-    if (DATA[num]) {
-        QUESTIONS = DATA[num].questions;
-        ANSWERS = DATA[num].answers;
+    if (currentShtemaran === 2) {
+        const DATA2 = {
+            3: typeof SECTION_3_DATA !== 'undefined' ? SECTION_3_DATA : null,
+            5: typeof SECTION_5_DATA !== 'undefined' ? SECTION_5_DATA : null,
+            6: typeof SECTION_6_DATA !== 'undefined' ? SECTION_6_DATA : null,
+            8: typeof SECTION_8_DATA !== 'undefined' ? SECTION_8_DATA : null,
+            10: typeof SECTION_10_DATA !== 'undefined' ? SECTION_10_DATA : null,
+            11: typeof SECTION_11_DATA !== 'undefined' ? SECTION_11_DATA : null,
+            12: typeof SECTION_12_DATA !== 'undefined' ? SECTION_12_DATA : null,
+        };
+        selectedData = DATA2[num];
+    } else if (currentShtemaran === 3) {
+        const DATA3 = {
+            3: typeof SHTEM3_SECTION_3_DATA !== 'undefined' ? SHTEM3_SECTION_3_DATA : null,
+            5: typeof SHTEM3_SECTION_5_DATA !== 'undefined' ? SHTEM3_SECTION_5_DATA : null
+        };
+        selectedData = DATA3[num];
+    }
+
+    if (!selectedData && currentShtemaran !== 2 && currentShtemaran !== 3) {
+        alert("This section will be added soon!");
+        return;
+    }
+
+    if (selectedData) {
+        QUESTIONS = selectedData.questions;
+        ANSWERS = selectedData.answers;
         currentSection = num;
 
         document.getElementById('section-menu').style.display = 'none';
